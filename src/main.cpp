@@ -48,7 +48,7 @@ static void printUserName(bool printResult)
 
 	if (result == 0)
 	{
-		printf("Command executed successfully.  Na modify\n");
+		printf("Command executed successfully. Met Jimmy-image\n");
 	}
 	else
 	{
@@ -66,7 +66,7 @@ int main(int argc, char *argv[])
 
 	file_utils::creatFile(path, filename);
 
-	printUserName(false);
+	printUserName(true);
 
 	while (1)
 	{
