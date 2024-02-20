@@ -8,6 +8,8 @@
 #include <chrono>
 #include <ctime>
 
+
+#include "button.h"
 #include "gpio.h"
 
 static void printCurrentTime(void)
@@ -65,7 +67,7 @@ int main(int argc, char *argv[])
 	int ret;
 	int n;
 
-	GPIO gpio4(4, "in");
+	button gpio4(4, DEBOUNCE, NORM_HIGH);
 
 	printUserName(false);
 
@@ -83,7 +85,7 @@ int main(int argc, char *argv[])
 	// 	return 1;
 	// }
 
-	if (gpio4.getValue())
+	if (gpio4.read())
 	{
 		printf("Initial value value=1\n");
 	}
@@ -114,17 +116,22 @@ int main(int argc, char *argv[])
 	// Set the GPIO value to HIGH
 	gpio17.setValue(true);
 	// Wait for a moment (you can replace this with your actual logic)
-	sleep(1);
+	sleep(5);
 	// Set the GPIO value to LOW
 	gpio17.setValue(false);
 
 	while (1)
 	{
-		if (!gpio4.getValue())
+		if (gpio4.read())
 		{
 			printf("Is pressed\n");
 			printCurrentTime();
+			gpio17.setValue(true);
 		}
+		else{
+			gpio17.setValue(false);
+		}
+		usleep(1000);
 		// printf("Waiting\n");
 		// ret = epoll_wait(ep, &events, 1, -1);
 
