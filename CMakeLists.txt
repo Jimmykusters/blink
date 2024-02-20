@@ -13,7 +13,6 @@ include_directories(${INCLUDES})
 set(SOURCES
     src/lib/gpio.cpp
     src/lib/button.cpp
-    src/lib/gpio_event_manager.cpp
     src/lib/file_utils.cpp
     src/main.cpp
 )
