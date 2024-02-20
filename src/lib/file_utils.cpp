@@ -43,3 +43,29 @@ void file_utils::creatFile(const std::string &path, const std::string &filename)
         createFile.close();
     }
 }
+
+int file_utils::countLines(const std::string &path, const std::string &filename)
+{
+    std::string pathFile = path + filename;
+    
+    std::ifstream inputFile(pathFile);
+
+    // Check if the file is successfully opened
+    if (!inputFile.is_open()) {
+        std::cerr << "Unable to open the file.\n";
+        return 1;
+    }
+
+    // Count the lines
+    int lineCount = 0;
+    std::string line;
+
+    while (std::getline(inputFile, line)) {
+        // Increment the line count for each line
+        lineCount++;
+    }
+
+    // Close the file
+    inputFile.close();
+    return lineCount;
+}

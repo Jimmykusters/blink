@@ -12,12 +12,19 @@
 #include "button.h"
 #include "gpio.h"
 
-// static void printCurrentTime(void)
-// {
-// 	auto current_time = std::chrono::system_clock::now();
-// 	std::time_t time_now = std::chrono::system_clock::to_time_t(current_time);
-// 	std::cout << "Current system time: " << std::ctime(&time_now);
-// }
+static void printCurrentTime(void)
+{
+	auto current_time = std::chrono::system_clock::now();
+	std::time_t time_now = std::chrono::system_clock::to_time_t(current_time);
+	std::cout << "Current system time: " << std::ctime(&time_now);
+}
+
+static void printNumberOfPresses(const std::string &path, const std::string &filename)
+{
+	int numberOfButtonPresses = file_utils::countLines(path, filename);
+	std::cout << "The button is pressed: " << numberOfButtonPresses << " times " << std::endl;
+}
+
 
 static void WriteCurrentTimeToFile(const std::string &path, const std::string &filename)
 {
@@ -29,7 +36,6 @@ static void WriteCurrentTimeToFile(const std::string &path, const std::string &f
 
 	file_utils::appendToFile(pathFile, time_string);
 }
-
 
 static void printUserName(bool printResult)
 {
@@ -67,6 +73,7 @@ int main(int argc, char *argv[])
 		if (gpio4.read())
 		{
 			WriteCurrentTimeToFile(path, filename);
+			printNumberOfPresses(path, filename);
 			gpio17.setValue(true);
 		}
 		else{
