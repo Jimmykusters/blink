@@ -5,13 +5,14 @@ project(blink)
 set(INCLUDES
     .
     src
-    src/button/inc
+    src/lib/inc
     )
 include_directories(${INCLUDES})
 
 # Add your source files
 set(SOURCES
-    src/button/button.cpp
+    src/lib/gpio.cpp
+    src/lib/gpio_event_manager.cpp
     src/main.cpp
 )
 

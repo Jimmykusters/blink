@@ -14,14 +14,20 @@
 // GPIO class to handle GPIO operations
 class GPIO {
 public:
+    // Sets the gpio to output
     GPIO(int number);
+    // Allows to set the direction
+    GPIO(int number, const std::string& direction);
 
     ~GPIO();
 
     void setValue(bool value);
+    bool getValue(void);
 
 private:
     int gpioNumber;
+    // True = input
+    bool direction;
 
     void exportGPIO();
     void unexportGPIO();
