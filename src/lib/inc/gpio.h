@@ -4,6 +4,8 @@
 #include <string>
 #include <sstream>
 
+#include "file_utils.h"
+
 #define GPIO_BASE_PATH  "/sys/class/gpio/"
 
 #define GPIO_EXPORT     "export"
@@ -39,7 +41,7 @@ private:
     // True = input
     bool direction;
 
-    bool writeToFile(const std::string& path, const std::string& value);
+    // bool writeToFile(const std::string& path, const std::string& value);
 
     void exportGPIO();
     void unexportGPIO();

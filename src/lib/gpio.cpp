@@ -27,7 +27,7 @@ void GPIO::setValue(bool value)
     {
         std::cerr << "Direction is an input " << gpioNumber << std::endl;
     }
-    writeToFile(getFilePath("value"), (value ? "1" : "0"));
+    file_utils::writeToFile(getFilePath("value"), (value ? "1" : "0"));
 }
 
 bool GPIO::getValue(void)
@@ -62,18 +62,18 @@ bool GPIO::getValue(void)
 void GPIO::exportGPIO()
 {
     std::string exportString = std::string(GPIO_BASE_PATH) + GPIO_EXPORT;
-    writeToFile(exportString, std::to_string(gpioNumber));
+    file_utils::writeToFile(exportString, std::to_string(gpioNumber));
 }
 
 void GPIO::unexportGPIO()
 {
     std::string unexportString = std::string(GPIO_BASE_PATH) + GPIO_UNEXPORT;
-    writeToFile(unexportString, std::to_string(gpioNumber));
+    file_utils::writeToFile(unexportString, std::to_string(gpioNumber));
 }
 
 void GPIO::setDirection(const std::string &direction)
 {
-    writeToFile(getFilePath("direction"), direction);
+    file_utils::writeToFile(getFilePath("direction"), direction);
 }
 
 std::string GPIO::getFilePath(const std::string &fileName)
@@ -81,18 +81,4 @@ std::string GPIO::getFilePath(const std::string &fileName)
     std::stringstream ss;
     ss << GPIO_BASE_PATH << "gpio" << gpioNumber << "/" << fileName;
     return ss.str();
-}
-
-bool GPIO::writeToFile(const std::string &path, const std::string &value)
-{
-    std::ofstream file(path.c_str());
-    if (!file.is_open())
-    {
-        std::cerr << "Error opening file: " << path << std::endl;
-        return false;
-    }
-
-    file << value;
-    file.close();
-    return true;
 }
