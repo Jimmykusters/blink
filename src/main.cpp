@@ -48,7 +48,7 @@ static void printUserName(bool printResult)
 
 	if (result == 0)
 	{
-		printf("Command executed successfully. Met Jimmy-image\n");
+		printf("Command executed successfully. Met Jimmy-image vanuit Ubuntu\n");
 	}
 	else
 	{

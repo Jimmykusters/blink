@@ -4,7 +4,6 @@ GPIO::GPIO(int number) : gpioNumber(number)
 {
     exportGPIO();
     setDirection("out");
-    direction = false;
     std::cout << "GPIO instance initialized " << gpioNumber << " as out" << std::endl;
 }
 
@@ -73,6 +72,15 @@ void GPIO::unexportGPIO()
 
 void GPIO::setDirection(const std::string &direction)
 {
+    if(direction == "out")
+    {
+        this->direction = false;
+    }
+    else
+    {
+        this->direction =true;
+    }
+
     file_utils::writeToFile(getFilePath("direction"), direction);
 }
 
