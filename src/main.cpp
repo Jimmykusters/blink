@@ -3,7 +3,12 @@
 #include <fcntl.h>
 #include <fstream>
 #include <unistd.h>
+#include <pthread.h>
+
+#include <sys/syscall.h>
 #include <sys/types.h>
+
+#include <nlohmann/json.hpp>
 
 #include <chrono>
 #include <ctime>
@@ -56,17 +61,14 @@ static void printUserName(bool printResult)
 	}
 }
 
-int main(int argc, char *argv[])
+static void *buttonThread(void *arg)
 {
 	const std::string filename = "buttonPresses.txt";
 	const std::string path = "/tmp/";
+	printf("Starting the button thread\n");
 
 	button gpio4(4, DEBOUNCE, NORM_HIGH);
-	GPIO gpio17(17);
-
 	file_utils::creatFile(path, filename);
-
-	printUserName(true);
 
 	while (1)
 	{
@@ -74,13 +76,67 @@ int main(int argc, char *argv[])
 		{
 			WriteCurrentTimeToFile(path, filename);
 			printNumberOfPresses(path, filename);
-			gpio17.setValue(true);
 		}
-		else{
-			gpio17.setValue(false);
-		}
+
 		usleep(1000);
 	}
-	gpio17.setValue(false);
+	printf("Stopping the button thread\n");
+	return NULL;
+}
+
+static void *ledThread(void *arg)
+{
+	static bool ledState = false;
+	GPIO gpio17(17);
+	printf("Starting the led thread\n");
+	while (1)
+	{
+		ledState = !ledState;
+		gpio17.setValue(ledState);
+		sleep(1);
+	}
+	printf("Stopping the led thread\n");
+	return NULL;
+}
+
+static void *jsonThread(void *arg)
+{
+	const std::string filename = "jsonTest.json";
+	const std::string path = "/tmp/";
+	std::string pathFile = path + filename;
+
+	printf("Starting the JSON thread\n");
+
+	file_utils::creatFile(path, filename);
+
+	nlohmann::json j;
+
+	j["deviceName"] = "raspberry";
+	j["mockAPIkey"] = "API:12345";
+	j["version"] = 1.2;
+
+	std::cout << j.dump(4) << std::endl;
+
+	file_utils::writeToFile(pathFile, j.dump(4));
+
+	printf("Ending the JSON thread\n");
+
+	return NULL;
+}
+
+int main(int argc, char *argv[])
+{
+	pthread_t btnT, ledT, jsonT;
+	printf("Application using threads\n");
+	// printUserName(true);
+
+	pthread_create(&btnT, NULL, buttonThread, NULL);
+	pthread_create(&ledT, NULL, ledThread, NULL);
+	pthread_create(&jsonT, NULL, jsonThread, NULL);
+
+	pthread_join(btnT, NULL);
+	pthread_join(ledT, NULL);
+	pthread_join(jsonT, NULL);
+	printf("App stopped");
 	return 0;
 }
