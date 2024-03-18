@@ -37,7 +37,7 @@ bool GPIO::getValue(void)
     // Check if input
     if (!direction)
     {
-        std::cerr << "Direction is an output " << gpioNumber << std::endl;
+        // std::cerr << "Direction is an output " << gpioNumber << std::endl;
     }
 
     std::ifstream valueFile(getFilePath("value"));
