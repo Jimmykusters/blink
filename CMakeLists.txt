@@ -16,7 +16,9 @@ set(SOURCES
     src/lib/gpio.cpp
     src/lib/button.cpp
     src/lib/file_utils.cpp
+    src/lib/app_utils.cpp
     src/lib/ipc_shared_file.cpp
+    src/lib/ipc_shared_memory.cpp
     src/main.cpp
 )
 

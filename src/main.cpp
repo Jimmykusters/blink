@@ -12,7 +12,6 @@
 #include <nlohmann/json.hpp>
 #include <curl/curl.h>
 
-
 #include <chrono>
 #include <ctime>
 
@@ -20,6 +19,7 @@
 #include "button.h"
 #include "gpio.h"
 #include "ipc_shared_file.h"
+#include "ipc_shared_memory.h"
 
 #define API_KEY "25964978-bbcc-48ec-a252-96e2d7964461"
 
@@ -88,63 +88,6 @@ static void *buttonThread(void *arg)
 	}
 	printf("Stopping the button thread\n");
 	return NULL;
-}
-
-static void *ledThread(void *arg)
-{
-	static bool ledState = false;
-	GPIO gpio17(17);
-	printf("Starting the led thread\n");
-	while (1)
-	{
-		ledState = !ledState;
-		gpio17.setValue(ledState);
-		sleep(1);
-	}
-	printf("Stopping the led thread\n");
-	return NULL;
-}
-
-static void *jsonThread(void *arg)
-{
-	const std::string filename = "jsonTest.json";
-	const std::string path = "/tmp/";
-	std::string pathFile = path + filename;
-
-	printf("Starting the JSON thread\n");
-
-	file_utils::creatFile(path, filename);
-
-	nlohmann::json j;
-
-	j["deviceName"] = "raspberry";
-	j["mockAPIkey"] = "API:12345";
-	j["version"] = 1.2;
-
-	std::cout << j.dump(4) << std::endl;
-
-	file_utils::writeToFile(pathFile, j.dump(4));
-
-	printf("Ending the JSON thread\n");
-
-	return NULL;
-}
-
-int main(int argc, char *argv[])
-{
-	pthread_t btnT, ledT, jsonT;
-	printf("Application using threads\n");
-	// printUserName(true);
-
-	pthread_create(&btnT, NULL, buttonThread, NULL);
-	pthread_create(&ledT, NULL, ledThread, NULL);
-	pthread_create(&jsonT, NULL, jsonThread, NULL);
-
-	pthread_join(btnT, NULL);
-	pthread_join(ledT, NULL);
-	pthread_join(jsonT, NULL);
-	printf("App stopped");
-	return 0;
 }
 
 static void *ledThread(void *arg)
@@ -269,8 +212,10 @@ int main(int argc, char *argv[])
 	pthread_join(jsonT, NULL);
 	pthread_join(httpT, NULL);
 
-	// IPC using a shered file receiving
-	IPC_sharedFile_receive();
+	/* IPC using a shared file */
+	// IPC_sharedFile_receive();
+	/* IPC using shared memory */
+	IPC_sharedMemory_receive();
 
 	printf("App stopped");
 	return 0;

@@ -1,10 +1,5 @@
 #include "ipc_shared_file.h"
 
-void report_and_exit(const char* msg) {
-  perror(msg);
-  exit(-1); /* EXIT_FAILURE */
-}
-
 void IPC_sharedFile_send(void)
 {
 	struct flock lock;
